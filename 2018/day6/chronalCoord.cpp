@@ -5,22 +5,15 @@
 #include <utility>
 #include <unordered_set>
 #include <unordered_map>
+#include <stdlib.h>
 
 
 using namespace std;
 
 int getDist(int p1,int p2,int o1,int o2)
 {
-    int ret;
-    if(p2 <= o2)
-        ret += o2-p2;
-    else
-        ret += p2-o2;
-    if(p1 <= o1)
-        ret += o1-p1;
-    else
-        ret += p1-o1;
-    return ret;
+
+    return abs(p1-o1)+abs(p2-o2);
 
 }
 
@@ -33,6 +26,8 @@ int main()
 
     vector<vector<pair<int,int>>> grid(500);
     //pair stores value,distance from value
+
+    vector<pair<int,int>> points;
 
     // grid.resize(10);
     for(int i = 0; i < 500; i++)
@@ -49,6 +44,8 @@ int main()
         inFile.ignore(1);
         grid[y][x].first = count;
         grid[y][x].second = 0;
+
+        points.push_back(make_pair(x,y));
 
         int n=0,e=0,s=0,w=0;
         int i=y,j=x;
@@ -141,6 +138,36 @@ int main()
     for(auto l:counts)
         if(l.second > max)
             max = l.second;
-    cout << max;
+    // cout << max << endl;
+
+    max = 0;
+    int total = 0;
+    int l = 0;
+
+    for(int i = 0; i < grid.size()-1; i++)
+    {
+        for(int j = 0; j < grid.size()-1; j++)
+        {
+            total = 0;
+            for(auto z: points)
+            {
+                // cout << z.second << " " << z.first << endl;
+                total += getDist(i,j,z.second,z.first);
+            }
+
+            if(total < 10000)
+            {
+                l++;
+                // cout << total << endl;
+            }
+            if(total > max && total < 10000)
+            {
+                max = total;
+            }
+        }
+    }
+    cout << l << endl;
+    // cout << max << endl;
+
     return 0;
 }
